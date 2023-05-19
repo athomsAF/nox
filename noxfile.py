@@ -1,7 +1,39 @@
 import nox
 from nox import command
 import os
-import os
+import requests
+import dotenv
+
+dotenv.load_dotenv()
+TOKEN = os.getenv("GITHUB_TOKEN")
+USER= os.getenv("GITHUB_USER")
+REPOSITORY= os.getenv("GITHUB_REPOSITORY")
+# Define the necessary headers and data
+def create_github_pages() -> None:
+    headers = {
+        "Accept": "application/vnd.github+json",
+        "Authorization": f"Bearer {TOKEN}",
+        "X-GitHub-Api-Version": "2022-11-28"
+    }
+    data = {
+        "source": {
+            "branch": "docs",
+            "path": "/docs"
+        }
+    }
+    # Make the POST request
+    response = requests.post(
+        f"https://api.github.com/repos/{USER}/{REPOSITORY}/pages",
+        headers=headers,
+        json=data
+    )
+    # Check the response status
+    if response.status_code == 201:
+        print("GitHub Pages created successfully!")
+    else:
+        print("Failed to create GitHub Pages.")
+        print("Status code:", response.status_code)
+        print("Error message:", response.json())
 
 def commit_and_push_file(branch:str, session) -> None:
     time= session.run("date", "+%Y-%m-%d-%H-%M")
@@ -98,10 +130,10 @@ def docs(session: nox.Session) -> None:
     session.install("-r", "requirements/docs-requirements.txt")
     session.run("sphinx-apidoc",  "-o", "./docs_information/source", "./", "./noxfile.py", "./test")
     session.run("sphinx-build", "-b", "html", "./docs_information/source", "./docs")
-    session.run("firefox", "docs/build/index.html")
     session.run("touch","docs/.nojekyll")
     commit_and_push_file(branch, session)
     session.run("git", "checkout", "main")
+    create_github_pages()
 
 
 @nox.session(venv_backend="virtualenv", python=["3.11"])
