@@ -97,7 +97,7 @@ def docs(session: nox.Session) -> None:
     connect_branch(branch, session)
     session.install("-r", "requirements/docs-requirements.txt")
     session.run("sphinx-apidoc",  "-o", "./docs_information/source", "./", "./noxfile.py", "./test")
-    session.run("sphinx-build", "-b", "html", "./docs_information/source", "./docs/build")
+    session.run("sphinx-build", "-b", "html", "./docs_information/source", "./docs")
     session.run("firefox", "docs/build/index.html")
     session.run("touch","docs/.nojekyll")
     commit_and_push_file(branch, session)
