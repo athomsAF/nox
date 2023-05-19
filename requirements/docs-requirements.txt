@@ -1,0 +1,5 @@
+sphinx
+furo
+lumache
+sphinx-toolbox
+-r requirements.txt
