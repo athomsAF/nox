@@ -31,11 +31,20 @@ def create_github_pages() -> None:
     )
     # Check the response status
     if response.status_code == 201:
-        print("GitHub Pages created successfully!")
+        print("GitHub Pages send successfully!")
+        response = requests.post(
+        "https://api.github.com/repos/OWNER/REPO/pages",
+        headers=headers,
+        json=data
+        )
+        if response.status_code == 201:
+            print("GitHub Pages created successfully!")
     else:
         print("Failed to create GitHub Pages.")
         print("Status code:", response.status_code)
         print("Error message:", response.json())
+
+
 
 def commit_and_push_file(branch:str, session) -> None:
     time= session.run("date", "+%Y-%m-%d-%H-%M")
