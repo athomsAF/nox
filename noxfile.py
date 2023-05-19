@@ -5,12 +5,13 @@ import requests
 import dotenv
 import time
 
-dotenv.load_dotenv()
-TOKEN = os.getenv("GITHUB_TOKEN")
-USER= os.getenv("GITHUB_USER")
-REPOSITORY= os.getenv("GITHUB_REPOSITORY")
+
 # Define the necessary headers and data
 def create_github_pages() -> None:
+    dotenv.load_dotenv()
+    TOKEN = os.getenv("GITHUB_TOKEN")
+    USER= os.getenv("GITHUB_USER")
+    REPOSITORY= os.getenv("GITHUB_REPOSITORY")
     headers = {
         "Accept": "application/vnd.github+json",
         "Authorization": f"Bearer {TOKEN}",
