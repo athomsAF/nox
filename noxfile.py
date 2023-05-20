@@ -24,7 +24,6 @@ def check_if_commited() -> bool:
     else:
         return (True)
 
-
 # Define the necessary headers and data
 def create_github_pages() -> None:
     dotenv.load_dotenv()
@@ -117,10 +116,7 @@ def format(session: nox.Session) -> None:
         commit_and_push_file("format", session)
     except:
         print("formatting failed")
-    if check_if_commited():
-        print("formatting done")
-    else:
-        print("formatting failed")
+    print(check_if_commited())
 
 
 @nox.session(venv_backend="virtualenv", python=PYTHON_VERSIONS)
