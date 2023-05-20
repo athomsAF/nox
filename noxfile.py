@@ -1,41 +1,38 @@
+import os
+import time
+
+import dotenv
+import requests
+
 import nox
 from nox import command
-import os
-import requests
-import dotenv
-import time
+
+PYTHON_VERSIONS = ["3.11"]
 
 
 # Define the necessary headers and data
 def create_github_pages() -> None:
     dotenv.load_dotenv()
     TOKEN = os.getenv("GITHUB_TOKEN")
-    USER= os.getenv("GITHUB_USER")
-    REPOSITORY= os.getenv("GITHUB_REPOSITORY")
+    USER = os.getenv("GITHUB_USER")
+    REPOSITORY = os.getenv("GITHUB_REPOSITORY")
     headers = {
         "Accept": "application/vnd.github+json",
         "Authorization": f"Bearer {TOKEN}",
-        "X-GitHub-Api-Version": "2022-11-28"
+        "X-GitHub-Api-Version": "2022-11-28",
     }
-    data = {
-        "source": {
-            "branch": "docs",
-            "path": "/docs"
-        }
-    }
+    data = {"source": {"branch": "docs", "path": "/docs"}}
     # Make the POST request
     response = requests.post(
         f"https://api.github.com/repos/{USER}/{REPOSITORY}/pages",
         headers=headers,
-        json=data
+        json=data,
     )
     # Check the response status
     if response.status_code == 201:
         print("GitHub Pages send successfully!")
         response = requests.post(
-        "https://api.github.com/repos/OWNER/REPO/pages",
-        headers=headers,
-        json=data
+            "https://api.github.com/repos/OWNER/REPO/pages", headers=headers, json=data
         )
         if response.status_code == 201:
             print("GitHub Pages created successfully!")
@@ -45,15 +42,14 @@ def create_github_pages() -> None:
         print("Error message:", response.json())
 
 
-
-def commit_and_push_file(branch:str, session) -> None:
-    time= session.run("date", "+%Y-%m-%d-%H-%M")
+def commit_and_push_file(branch: str, session) -> None:
+    time = session.run("date", "+%Y-%m-%d-%H-%M")
     if branch == "test" or branch == "build":
         session.run("git", "add", "test")
         session.run("git", "add", "main.py")
         session.run("git", "add", "build")
-        #create a commit ith the date as YYY-MM-DD-HH-mm
-        time= session.run("date", "+%Y-%m-%d-%H-%M")
+        # create a commit ith the date as YYY-MM-DD-HH-mm
+        time = session.run("date", "+%Y-%m-%d-%H-%M")
         session.run("git", "push", "origin", "build")
     elif branch == "docs":
         session.run("git", "rm", "-r", "*")
@@ -61,11 +57,15 @@ def commit_and_push_file(branch:str, session) -> None:
         session.run("git", "commit", "-m", "docs")
         session.run("git", "push", "origin", "docs")
 
-def find_children_files(directory) -> list:
-	#find all folder in the directory
-    return [f for f in os.listdir(directory) if os.path.isdir(os.path.join(directory, f))]
 
-def connect_branch(name:str, session)->None:
+def find_children_files(directory) -> list:
+    # find all folder in the directory
+    return [
+        f for f in os.listdir(directory) if os.path.isdir(os.path.join(directory, f))
+    ]
+
+
+def connect_branch(name: str, session: nox.Session) -> None:
     try:
         session.run("git", "rev-parse", "--verify", name, silent=True)
     except command.CommandFailed:
@@ -78,24 +78,24 @@ def connect_branch(name:str, session)->None:
     session.run("git", "checkout", name)
 
 
-@nox.session(venv_backend="virtualenv", python=["3.11"]) # use this annotation on the wrapper works like a charm
+@nox.session(
+    venv_backend="virtualenv", python=PYTHON_VERSIONS
+)  # use this annotation on the wrapper works like a charm
 def format(session: nox.Session) -> None:
     """
-    Compute sub-jacobian parts / factorization.
+    format session uising black pylint and flake8
     Parameters
     ----------
-    inputs : Vector
-        unscaled, dimensional input variables read via inputs[key]
-    partials : Jacobian
-        sub-jac components written to partials[output_name, input_name]
+    session : nox_session
     """
     session.install(
         "-r", "requirements/format-requirements.txt"
     )  # installe les dependances
-    session.run("black", ".")  # formate le code
+    session.run("black", "--exclude", ".nox", ".")  # formate le code
+    session.run("isort", ".")  # formate les imports
 
 
-@nox.session(venv_backend="virtualenv", python=["3.11"])
+@nox.session(venv_backend="virtualenv", python=PYTHON_VERSIONS)
 def dev(session: nox.Session) -> None:
     """_summary_
 
@@ -109,48 +109,63 @@ def dev(session: nox.Session) -> None:
     # créer un setup.py ou pyproject.tomel ==> metadata du projet empàlacement du readme ect
 
 
-@nox.session(venv_backend="virtualenv", python=["3.11"])
+@nox.session(venv_backend="virtualenv", python=PYTHON_VERSIONS)
 def test(session: nox.Session) -> None:
-    branch="build"
+    branch = "build"
     connect_branch(branch, session)
     session.install("-r", "requirements/test-requirements.txt")
     try:
         test = session.run("python", "-u", "test/main_test.py")
     except:
         print("test failed")
-    #check if ll test passed well
+    # check if ll test passed well
     commit_and_push_file(branch, session)
 
-@nox.session(venv_backend="virtualenv", python=["3.11"])
+
+@nox.session(venv_backend="virtualenv", python=PYTHON_VERSIONS)
 def docs(session: nox.Session) -> None:
-    branch="docs"
+    branch = "docs"
     connect_branch("main", session)
-    #delete branch if it exists
+    # delete branch if it exists
     try:
         session.run("git", "branch", "-D", "docs")
         session.run("git", "push", "origin", "--delete", "docs")
     except:
         print("branch does not exist in github")
-    #recreate branch
+    # recreate branch
     connect_branch(branch, session)
-    session.run("git","update-index","--assume-unchanged",".env")
+    session.run("git", "update-index", "--assume-unchanged", ".env")
     session.install("-r", "requirements/docs-requirements.txt")
     for i in find_children_files("program"):
-        session.run("sphinx-apidoc",  "-o", "./docs_information/source", i, "./noxfile.py", "./test")
-    session.run("sphinx-apidoc",  "-o", "./docs_information/source", "./", "./noxfile.py", "./test")
+        session.run(
+            "sphinx-apidoc",
+            "-o",
+            "./docs_information/source",
+            i,
+            "./noxfile.py",
+            "./test",
+        )
+    session.run(
+        "sphinx-apidoc",
+        "-o",
+        "./docs_information/source",
+        "./",
+        "./noxfile.py",
+        "./test",
+    )
     session.run("sphinx-build", "-b", "html", "./docs_information/source", "./docs")
-    session.run("touch","docs/.nojekyll")
+    session.run("touch", "docs/.nojekyll")
     commit_and_push_file(branch, session)
     session.run("git", "checkout", "main")
     create_github_pages()
 
 
-@nox.session(venv_backend="virtualenv", python=["3.11"])
+@nox.session(venv_backend="virtualenv", python=PYTHON_VERSIONS)
 def lint(session: nox.Session) -> None:
     session.install("-r", "requirements/lint-requirements.txt")
     # session.run("pylint", "noxfile.py")
 
 
-@nox.session(venv_backend="virtualenv", python=["3.11"])
+@nox.session(venv_backend="virtualenv", python=PYTHON_VERSIONS)
 def build(session: nox.Session) -> None:
     session.install("-r", "requirements/requirements.txt")
