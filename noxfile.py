@@ -145,6 +145,7 @@ def docs(session: nox.Session) -> None:
     session.run("touch","docs/.nojekyll")
     commit_and_push_file(branch, session)
     session.run("git", "checkout", "main")
+    time.sleep(5)
     create_github_pages()
 
 
