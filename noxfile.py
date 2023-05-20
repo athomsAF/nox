@@ -106,6 +106,7 @@ def format(session: nox.Session) -> None:
     ----------
     session : nox_session
     """
+    print(check_if_commited())
     connect_branch("main", session)
     session.install(
         "-r", "requirements/format-requirements.txt"
