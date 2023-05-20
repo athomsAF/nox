@@ -106,18 +106,19 @@ def format(session: nox.Session) -> None:
     ----------
     session : nox_session
     """
-    print(check_if_commited())
-    connect_branch("main", session)
-    session.install(
-        "-r", "requirements/format-requirements.txt"
-    )  # installe les dependances
-    try:
-        session.run("black", "--exclude", ".nox", ".")  # formate le code
-        session.run("isort", ".")  # formate les imports
-        commit_and_push_file("format", session)
-    except:
-        print("formatting failed")
-    print(check_if_commited())
+    if check_if_commited():
+        connect_branch("main", session)
+        session.install(
+            "-r", "requirements/format-requirements.txt"
+        )  # installe les dependances
+        try:
+            session.run("black", "--exclude", ".nox", ".")  # formate le code
+            session.run("isort", ".")  # formate les imports
+            commit_and_push_file("format", session)
+        except:
+            print("formatting failed")
+    else:
+        print("Please commit your files before formatting")
 
 
 @nox.session(venv_backend="virtualenv", python=PYTHON_VERSIONS)
