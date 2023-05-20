@@ -138,6 +138,7 @@ def docs(session: nox.Session) -> None:
         print("branch does not exist in github")
     #recreate branch
     connect_branch(branch, session)
+    session.run("git","update-index","--assume-unchanged",".env")
     session.install("-r", "requirements/docs-requirements.txt")
     session.run("sphinx-apidoc",  "-o", "./docs_information/source", "./", "./noxfile.py", "./test")
     session.run("sphinx-build", "-b", "html", "./docs_information/source", "./docs")
