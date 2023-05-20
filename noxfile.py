@@ -19,7 +19,7 @@ def check_if_commited() -> bool:
     output = result.stdout
     print(output)
     # Check if the output contains any indications of uncommitted files
-    if "Changes not staged for commit" in output or "Untracked files" in output or "aucune modification n'a été ajoutée à la validation" in output:
+    if "Changes not staged for commit" in output or "Untracked files" in output or "aucune modification n'a été ajoutée à la validation" in output or "modifié :"in output:
         return (False)
     else:
         return (True)
