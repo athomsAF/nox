@@ -1,5 +1,5 @@
 import os
-import time
+import subprocess
 
 import dotenv
 import requests
@@ -8,6 +8,21 @@ import nox
 from nox import command
 
 PYTHON_VERSIONS = ["3.11"]
+
+
+def check_if_commited() -> bool:
+    # Change the working directory
+    # Run the git status command and capture the output
+    result = subprocess.run(["git", "status"], capture_output=True, text=True)
+
+    # Get the output of the command
+    output = result.stdout
+    print(output)
+    # Check if the output contains any indications of uncommitted files
+    if "Changes not staged for commit" in output or "Untracked files" in output:
+        return (False)
+    else:
+        return (True)
 
 
 # Define the necessary headers and data
@@ -101,6 +116,10 @@ def format(session: nox.Session) -> None:
         session.run("isort", ".")  # formate les imports
         commit_and_push_file("format", session)
     except:
+        print("formatting failed")
+    if check_if_commited():
+        print("formatting done")
+    else:
         print("formatting failed")
 
 
