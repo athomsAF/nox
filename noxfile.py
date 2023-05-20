@@ -61,14 +61,9 @@ def commit_and_push_file(branch:str, session) -> None:
         session.run("git", "commit", "-m", "docs")
         session.run("git", "push", "origin", "docs")
 
-def find_children_files(directory):
-	test_files = []
-	for root, dirs, files in os.walk(directory):
-		for file in files:
-			if file.endswith('.py'):
-				test_files.append(os.path.join(root, file))
-	return test_files
-
+def find_children_files(directory) -> list:
+	#find all folder in the directory
+    return [f for f in os.listdir(directory) if os.path.isdir(os.path.join(directory, f))]
 
 def connect_branch(name:str, session)->None:
     try:
