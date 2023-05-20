@@ -56,6 +56,10 @@ def commit_and_push_file(branch: str, session) -> None:
         session.run("git", "add", "docs")
         session.run("git", "commit", "-m", "docs")
         session.run("git", "push", "origin", "docs")
+    elif branch == "format":
+        session.run("git", "add", ".")
+        session.run("git", "commit", "-m", f"format - {time}")
+        session.run("git","push")
 
 
 def find_children_files(directory) -> list:
@@ -88,11 +92,16 @@ def format(session: nox.Session) -> None:
     ----------
     session : nox_session
     """
+    connect_branch("main", session)
     session.install(
         "-r", "requirements/format-requirements.txt"
     )  # installe les dependances
-    session.run("black", "--exclude", ".nox", ".")  # formate le code
-    session.run("isort", ".")  # formate les imports
+    try:
+        session.run("black", "--exclude", ".nox", ".")  # formate le code
+        session.run("isort", ".")  # formate les imports
+        commit_and_push_file("format", session)
+    except:
+        print("formatting failed")
 
 
 @nox.session(venv_backend="virtualenv", python=PYTHON_VERSIONS)
