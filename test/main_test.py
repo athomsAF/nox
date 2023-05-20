@@ -7,6 +7,11 @@ sys.path.append(str(Path(__file__).resolve().parents[1]))  # Ajoutez le réperto
 from main import main
 
 class MainTestCase(unittest.TestCase):
+	"""_summary_
+
+	Args:
+	    unittest (_type_): _description_
+	"""
 	def test_output(self):
 		# Créez un objet StringIO pour capturer la sortie standard
 		captured_output = StringIO()
