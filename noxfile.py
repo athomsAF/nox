@@ -140,6 +140,8 @@ def docs(session: nox.Session) -> None:
     connect_branch(branch, session)
     session.run("git","update-index","--assume-unchanged",".env")
     session.install("-r", "requirements/docs-requirements.txt")
+    for i in find_children_files("program"):
+        session.run("sphinx-apidoc",  "-o", "./docs_information/source", i, "./noxfile.py", "./test")
     session.run("sphinx-apidoc",  "-o", "./docs_information/source", "./", "./noxfile.py", "./test")
     session.run("sphinx-build", "-b", "html", "./docs_information/source", "./docs")
     session.run("touch","docs/.nojekyll")
