@@ -8,10 +8,9 @@ Welcome to nox-template's documentation!
 
 .. toctree::
    :maxdepth: 4
-   :caption: Contents:
+   :glob:
 
-   modules
-
+   ../../*
 
 Indices and tables
 ==================
