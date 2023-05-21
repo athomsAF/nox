@@ -30,6 +30,7 @@ extensions = [
     "sphinx.ext.doctest",
     "sphinx.ext.autosummary",
     "sphinx.ext.napoleon",
+    "sphinx.ext.autosummary",
 ]
 
 autodoc_mock_imports = ["../../noxfile.py"]
@@ -41,7 +42,7 @@ autodoc_default_options = {
     "undoc-members": True,
     "show-inheritance": True,
 }
-
+autosummary_generate = True
 
 templates_path = ["_templates"]
 exclude_patterns = []

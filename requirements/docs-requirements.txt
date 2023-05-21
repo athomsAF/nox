@@ -2,4 +2,5 @@ sphinx
 furo
 lumache
 sphinx-toolbox
+sphinx-autosummary
 -r requirements.txt

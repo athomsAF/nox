@@ -66,7 +66,7 @@ def commit_and_push_file(branch: str, session) -> None:
         time = session.run("date", "+%Y-%m-%d-%H-%M")
         session.run("git", "push", "origin", "build")
     elif branch == "docs":
-        session.run("git", "rm", "-r", "*")
+        session.run("git", "rm", "-r", "*", "--exclude", "docs_informations")
         session.run("git", "add", "docs")
         session.run("git", "commit", "-m", "docs")
         session.run("git", "push", "origin", "docs")
@@ -172,8 +172,8 @@ def docs(session: nox.Session) -> None:
                 "./docs_information/source",
                 i,
                 "./noxfile.py",
-                "./test",
-                "./__pycache__"
+                # "./test",
+                # "./__pycache__"
             )
         session.run(
             "sphinx-apidoc",
@@ -181,8 +181,8 @@ def docs(session: nox.Session) -> None:
             "./docs_information/source",
             "./",
             "./noxfile.py",
-            "./test",
-            "./__pycache__"
+            # "./test",
+            # "./__pycache__"
         )
         session.run("sphinx-build", "-b", "html", "./docs_information/source", "./docs")
         session.run("touch", "docs/.nojekyll")
