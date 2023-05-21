@@ -84,16 +84,17 @@ def find_children_files(directory) -> list:
 
 
 def connect_branch(name: str, session: nox.Session) -> None:
-    try:
-        session.run("git", "rev-parse", "--verify", name, silent=True)
-    except command.CommandFailed:
-        print(f"La branche {name} n'existe pas. Création de la branche...")
-        session.run("git", "branch", name)
-    else:
-        print(f"La branche {name} existe déjà.")
-
-    print(f"Se connecter à la branche {name}..")
-    session.run("git", "checkout", name)
+    if check_if_commited():
+        try:
+            session.run("git", "rev-parse", "--verify", name, silent=True)
+        except command.CommandFailed:
+            print(f"La branche {name} n'existe pas. Création de la branche...")
+            session.run("git", "branch", name)
+        else:
+            print(f"La branche {name} existe déjà.")
+        session.run("git", "checkout", name)
+        return (True)
+    return (False)
 
 
 @nox.session(
@@ -138,52 +139,58 @@ def dev(session: nox.Session) -> None:
 @nox.session(venv_backend="virtualenv", python=PYTHON_VERSIONS)
 def test(session: nox.Session) -> None:
     branch = "build"
-    connect_branch(branch, session)
-    session.install("-r", "requirements/test-requirements.txt")
-    try:
-        test = session.run("python", "-u", "test/main_test.py")
-    except:
-        print("test failed")
-    # check if ll test passed well
-    commit_and_push_file(branch, session)
+    if connect_branch(branch, session):
+        session.install("-r", "requirements/test-requirements.txt")
+        try:
+            test = session.run("python", "-u", "test/main_test.py")
+        except:
+            print("test failed")
+        # check if ll test passed well
+        commit_and_push_file(branch, session)
+    else:
+        print("Please commit your files before testing")
 
 
 @nox.session(venv_backend="virtualenv", python=PYTHON_VERSIONS)
 def docs(session: nox.Session) -> None:
     branch = "docs"
-    connect_branch("main", session)
-    # delete branch if it exists
-    try:
-        session.run("git", "branch", "-D", "docs")
-        session.run("git", "push", "origin", "--delete", "docs")
-    except:
-        print("branch does not exist in github")
-    # recreate branch
-    connect_branch(branch, session)
-    session.run("git", "update-index", "--assume-unchanged", ".env")
-    session.install("-r", "requirements/docs-requirements.txt")
-    for i in find_children_files("program"):
+    if connect_branch("main", session):
+        # delete branch if it exists
+        try:
+            session.run("git", "branch", "-D", "docs")
+            session.run("git", "push", "origin", "--delete", "docs")
+        except:
+            print("branch does not exist in github")
+        # recreate branch
+        connect_branch(branch, session)
+        session.run("git", "update-index", "--assume-unchanged", ".env")
+        session.install("-r", "requirements/docs-requirements.txt")
+        for i in find_children_files("program"):
+            session.run(
+                "sphinx-apidoc",
+                "-o",
+                "./docs_information/source",
+                i,
+                "./noxfile.py",
+                "./test",
+                "./__pycache__"
+            )
         session.run(
             "sphinx-apidoc",
             "-o",
             "./docs_information/source",
-            i,
+            "./",
             "./noxfile.py",
             "./test",
+            "./__pycache__"
         )
-    session.run(
-        "sphinx-apidoc",
-        "-o",
-        "./docs_information/source",
-        "./",
-        "./noxfile.py",
-        "./test",
-    )
-    session.run("sphinx-build", "-b", "html", "./docs_information/source", "./docs")
-    session.run("touch", "docs/.nojekyll")
-    commit_and_push_file(branch, session)
-    session.run("git", "checkout", "main")
-    create_github_pages()
+        session.run("sphinx-build", "-b", "html", "./docs_information/source", "./docs")
+        session.run("touch", "docs/.nojekyll")
+        commit_and_push_file(branch, session)
+        session.run("git", "checkout", "main")
+        create_github_pages()
+    else:
+        print("Please commit your files before formatting")
 
 
 @nox.session(venv_backend="virtualenv", python=PYTHON_VERSIONS)
