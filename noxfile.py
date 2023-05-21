@@ -156,16 +156,9 @@ def test(session: nox.Session) -> None:
 def docs(session: nox.Session) -> None:
     branch = "docs"
     if connect_branch("main", session):
-        # delete branch if it exists
-        try:
-            session.run("git", "branch", "-D", "docs")
-            session.run("git", "push", "origin", "--delete", "docs")
-        except:
-            print("branch does not exist in github")
-        # recreate branch
-        connect_branch(branch, session)
-        session.run("git", "update-index", "--assume-unchanged", ".env")
         session.install("-r", "requirements/docs-requirements.txt")
+        # delete branch if it exists
+        print(find_children_files("program"))
         for i in find_children_files("program"):
             session.run(
                 "sphinx-apidoc",
@@ -185,6 +178,18 @@ def docs(session: nox.Session) -> None:
             "./test",
             "./__pycache__"
         )
+        session.run("git", "add", "docs_information/source")
+        session.run("git", "commit", "-m", "docs")
+        try:
+            session.run("git", "branch", "-D", "docs")
+            session.run("git", "push", "origin", "--delete", "docs")
+        except:
+            print("branch does not exist in github")
+        # recreate branch
+        connect_branch(branch, session)
+        session.run("git", "update-index", "--assume-unchanged", ".env")
+
+
         session.run("sphinx-build", "-b", "html", "./docs_information/source", "./docs")
         session.run("touch", "docs/.nojekyll")
         commit_and_push_file(branch, session)
