@@ -67,7 +67,6 @@ def commit_and_push_file(branch: str, session) -> None:
         session.run("git", "push", "origin", "build")
     elif branch == "docs":
         session.run("git", "rm", "-r", "*")
-        session.run("cp", "-r", "docs_information/source", "./docs")
         session.run("git", "add", "docs")
         session.run("git", "commit", "-m", "docs")
         session.run("git", "push", "origin", "docs")
