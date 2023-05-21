@@ -76,11 +76,15 @@ def commit_and_push_file(branch: str, session) -> None:
         session.run("git","push")
 
 
-def find_children_files(directory) -> list:
-    # find all folder in the directory
-    return [
-        f for f in os.listdir(directory) if os.path.isdir(os.path.join(directory, f)) and "__pycache__" not in f
-    ]+[os.path.join(directory,"")]
+def list_sub_folder(folder) -> list:
+    # find all folder in the folder
+    sub_folder = []
+    for name in os.listdir(folder):
+        path = os.path.join(folder, name)
+        if os.path.isdir(path) and "__pycache__" not in path:
+            sub_folder.append(path)
+            sub_folder.extend(list_sub_folder(path))
+    return sub_folder
 
 
 def connect_branch(name: str, session: nox.Session) -> None:
@@ -158,8 +162,9 @@ def docs(session: nox.Session) -> None:
         session.install("-r", "requirements/docs-requirements.txt")
         nb_elements_in_source = os.listdir("./docs_information/source")
         # delete branch if it exists
-        print(find_children_files("program"))
-        for i in find_children_files("program"):
+        list_subfolder_programm = list_sub_folder("program") + ["./program"]
+        print(list_subfolder_programm)
+        for i in list_subfolder_programm:
             session.run(
                 "sphinx-apidoc",
                 "-o",
