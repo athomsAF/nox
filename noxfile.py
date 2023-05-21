@@ -80,7 +80,7 @@ def commit_and_push_file(branch: str, session) -> None:
 def find_children_files(directory) -> list:
     # find all folder in the directory
     return [
-        f for f in os.listdir(directory) if os.path.isdir(os.path.join(directory, f))
+        f for f in os.listdir(directory) if os.path.isdir(os.path.join(directory, f)) and "__pycache__" not in f
     ]
 
 
