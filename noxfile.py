@@ -178,8 +178,8 @@ def docs(session: nox.Session) -> None:
             "./test",
             "./__pycache__"
         )
-        session.run("git", "add", "docs_information/source")
-        session.run("git", "commit", "-m", '-f', "docs")
+        session.run("git", "add",'-f', "docs_information/source")
+        session.run("git", "commit", "-m", "docs")
         try:
             session.run("git", "branch", "-D", "docs")
             session.run("git", "push", "origin", "--delete", "docs")
