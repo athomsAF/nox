@@ -164,17 +164,17 @@ def docs(session: nox.Session) -> None:
         # delete branch if it exists
         list_subfolder_programm = list_sub_folder("program") + ["./program"]
         print(list_subfolder_programm)
-        for i in list_subfolder_programm:
-            session.run(
-                "sphinx-apidoc",
-                "--implicit-namespaces",
-                "-o",
-                "./docs_information/source",
-                i,
-                "./noxfile.py",
-                "./test",
-                "./__pycache__"
-            )
+        # for i in list_subfolder_programm:
+        #     session.run(
+        #         "sphinx-apidoc",
+        #         "--implicit-namespaces",
+        #         "-o",
+        #         "./docs_information/source",
+        #         i,
+        #         "./noxfile.py",
+        #         "./test",
+        #         "./__pycache__"
+        #     )
         session.run(
             "sphinx-apidoc",
             "--implicit-namespaces",
