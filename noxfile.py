@@ -167,6 +167,7 @@ def docs(session: nox.Session) -> None:
         for i in list_subfolder_programm:
             session.run(
                 "sphinx-apidoc",
+                "--implicit-namespaces",
                 "-o",
                 "./docs_information/source",
                 i,
@@ -176,6 +177,7 @@ def docs(session: nox.Session) -> None:
             )
         session.run(
             "sphinx-apidoc",
+            "--implicit-namespaces",
             "-o",
             "./docs_information/source",
             "./",
