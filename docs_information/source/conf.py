@@ -10,7 +10,8 @@ import sys
 
 sys.path.insert(0, os.path.abspath("../.."))
 sys.path.insert(0, os.path.abspath("../../program"))
-sys.argv.extend(["-E"])
+sys.path.insert(0, os.path.abspath("../../program/flutter"))
+sys.path.insert(0, os.path.abspath("../../program/flutter/ezfzf"))
 
 
 project = "nox-template"

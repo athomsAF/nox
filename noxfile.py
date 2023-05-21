@@ -162,21 +162,8 @@ def docs(session: nox.Session) -> None:
         session.install("-r", "requirements/docs-requirements.txt")
         nb_elements_in_source = os.listdir("./docs_information/source")
         # delete branch if it exists
-        list_subfolder_programm = list_sub_folder("program") + ["./program"]
-        print(list_subfolder_programm)
-        # for i in list_subfolder_programm:
-        #     session.run(
-        #         "sphinx-apidoc",
-        #         "-o",
-        #         "./docs_information/source",
-        #         i,
-        #         "./noxfile.py",
-        #         "./test",
-        #         "./__pycache__"
-        #     )
         session.run(
             "sphinx-apidoc",
-            "--implicit-namespaces",
             "-o",
             "./docs_information/source",
             "./",
@@ -184,6 +171,17 @@ def docs(session: nox.Session) -> None:
             "./test",
             "./__pycache__"
         )
+        session.run(
+            "sphinx-apidoc",
+            "--implicit-namespaces",
+            "-o",
+            "./docs_information/source",
+            "./src",
+            "./noxfile.py",
+            "./test",
+            "./__pycache__"
+        )
+        
         if len(nb_elements_in_source) == os.listdir("./docs_information/source"):
             session.run("git", "add",'-f', "docs_information/source")
             session.run("git", "commit", "-m", "docs")
