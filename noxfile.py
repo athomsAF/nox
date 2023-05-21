@@ -156,6 +156,7 @@ def docs(session: nox.Session) -> None:
     branch = "docs"
     if connect_branch("main", session):
         session.install("-r", "requirements/docs-requirements.txt")
+        nb_elements_in_source = os.listdir("./docs_information/source")
         # delete branch if it exists
         print(find_children_files("program"))
         for i in find_children_files("program"):
@@ -177,8 +178,9 @@ def docs(session: nox.Session) -> None:
             "./test",
             "./__pycache__"
         )
-        session.run("git", "add",'-f', "docs_information/source")
-        session.run("git", "commit", "-m", "docs")
+        if len(nb_elements_in_source) == os.listdir("./docs_information/source"):
+            session.run("git", "add",'-f', "docs_information/source")
+            session.run("git", "commit", "-m", "docs")
         try:
             session.run("git", "branch", "-D", "docs")
             session.run("git", "push", "origin", "--delete", "docs")
