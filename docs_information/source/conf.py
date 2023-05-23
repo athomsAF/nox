@@ -62,4 +62,4 @@ source_suffix = {
     ".md": "markdown",
 }
 
-source_parsers = {'.md': 'recommonmark.parser.CommonMarkParser'}
+source_parsers = {".md": "recommonmark.parser.CommonMarkParser"}
