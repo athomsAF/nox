@@ -87,7 +87,16 @@ def list_sub_folder(folder) -> list:
     return sub_folder
 
 
-def connect_branch(name: str, session: nox.Session) -> None:
+def connect_branch(name: str, session: nox.Session) -> bool:
+    """connect to a branch if it exists or create it
+
+    Args:
+        name (str): name of the branch
+        session (nox.Session): session nox running
+
+    Returns:
+        bool: return if the cheeckout was successful
+    """
     if check_if_commited():
         try:
             session.run("git", "rev-parse", "--verify", name, silent=True)
@@ -161,16 +170,6 @@ def docs(session: nox.Session) -> None:
     if connect_branch("main", session):
         session.install("-r", "requirements/docs-requirements.txt")
         nb_elements_in_source = os.listdir("./docs_information/source")
-        # delete branch if it exists
-        session.run(
-            "sphinx-apidoc",
-            "-o",
-            "./docs_information/source",
-            "./",
-            "./noxfile.py",
-            "./test",
-            "./__pycache__"
-        )
         session.run(
             "sphinx-apidoc",
             "--implicit-namespaces",
@@ -181,7 +180,6 @@ def docs(session: nox.Session) -> None:
             "./test",
             "./__pycache__"
         )
-        
         if len(nb_elements_in_source) == os.listdir("./docs_information/source"):
             session.run("git", "add",'-f', "docs_information/source")
             session.run("git", "commit", "-m", "docs")
@@ -193,8 +191,6 @@ def docs(session: nox.Session) -> None:
         # recreate branch
         connect_branch(branch, session)
         session.run("git", "update-index", "--assume-unchanged", ".env")
-
-
         session.run("sphinx-build", "-b", "html", "./docs_information/source", "./docs")
         session.run("touch", "docs/.nojekyll")
         commit_and_push_file(branch, session)

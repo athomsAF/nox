@@ -3,4 +3,5 @@ furo
 lumache
 sphinx-toolbox
 sphinx-autopackagesummary
+recommonmark
 -r requirements.txt

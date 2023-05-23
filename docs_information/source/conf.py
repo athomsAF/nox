@@ -32,6 +32,7 @@ extensions = [
     "sphinx.ext.autosummary",
     "sphinx.ext.napoleon",
     "sphinx.ext.autosummary",
+    "recommonmark",
 ]
 
 autodoc_mock_imports = ["../../noxfile.py"]
@@ -54,3 +55,11 @@ exclude_patterns = []
 
 html_theme = "furo"
 html_static_path = ["_static"]
+
+source_suffix = {
+    ".rst": "restructuredtext",
+    ".txt": "markdown",
+    ".md": "markdown",
+}
+
+source_parsers = {'.md': 'recommonmark.parser.CommonMarkParser'}

@@ -2,6 +2,10 @@
 
 
 def main() -> None:
+    """Main function.
+
+    Print("Hello, World!")
+    """
     print("Hello, World!")
 
 
