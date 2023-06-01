@@ -172,39 +172,41 @@ def test(session: nox.Session) -> None:
 
 @nox.session(venv_backend="virtualenv", python=PYTHON_VERSIONS)
 def docs(session: nox.Session) -> None:
-    branch = "docs"
-    if connect_branch("main", session):
-        session.install("-r", "requirements/docs-requirements.txt")
-        nb_elements_in_source = os.listdir("./docs_information/source")
-        session.run(
-            "sphinx-apidoc",
-            "--implicit-namespaces",
-            "-o",
-            "./docs_information/source",
-            "./src",
-            "./noxfile.py",
-            "./test",
-            "./__pycache__",
-        )
-        if len(nb_elements_in_source) == os.listdir("./docs_information/source"):
-            session.run("git", "add", "-f", "docs_information/source")
-            session.run("git", "commit", "-m", "docs")
-        try:
-            session.run("git", "branch", "-D", "docs")
-            session.run("git", "push", "origin", "--delete", "docs")
-        except:
-            print("branch does not exist in github")
-        # recreate branch
-        connect_branch(branch, session)
-        session.run("git", "update-index", "--assume-unchanged", ".env")
-        session.run("sphinx-build", "-b", "html", "./docs_information/source", "./docs")
-        session.run("touch", "docs/.nojekyll")
-        commit_and_push_file(branch, session)
-        session.run("git", "checkout", "main")
-        create_github_pages()
-    else:
-        print("Please commit your files before formatting")
-
+    try:
+        branch = "docs"
+        if connect_branch("main", session):
+            session.install("-r", "requirements/docs-requirements.txt")
+            nb_elements_in_source = os.listdir("./docs_information/source")
+            session.run(
+                "sphinx-apidoc",
+                "--implicit-namespaces",
+                "-o",
+                "./docs_information/source",
+                "./src",
+                "./noxfile.py",
+                "./test",
+                "./__pycache__",
+            )
+            if len(nb_elements_in_source) == os.listdir("./docs_information/source"):
+                session.run("git", "add", "-f", "docs_information/source")
+                session.run("git", "commit", "-m", "docs")
+            try:
+                session.run("git", "branch", "-D", "docs")
+                session.run("git", "push", "origin", "--delete", "docs")
+            except:
+                print("branch does not exist in github")
+            # recreate branch
+            connect_branch(branch, session)
+            session.run("git", "update-index", "--assume-unchanged", ".env")
+            session.run("sphinx-build", "-b", "html", "./docs_information/source", "./docs")
+            session.run("touch", "docs/.nojekyll")
+            commit_and_push_file(branch, session)
+            session.run("git", "checkout", "main")
+            create_github_pages()
+        else:
+            print("Please commit your files before formatting")
+    except:
+        connect_branch("main", session)
 
 @nox.session(venv_backend="virtualenv", python=PYTHON_VERSIONS)
 def lint(session: nox.Session) -> None:

@@ -3,6 +3,6 @@ furo
 lumache
 sphinx-toolbox
 sphinx-autopackagesummary
-recommonmark
+myst_parser
 -r requirements.txt
 -r nox-requirements.txt
