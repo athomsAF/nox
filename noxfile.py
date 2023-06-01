@@ -175,19 +175,19 @@ def docs(session: nox.Session) -> None:
         branch = "docs"
         if connect_branch("main", session):
             session.install("-r", "requirements/docs-requirements.txt")
-            nb_elements_in_source = os.listdir("./docs_information/source")
+            nb_elements_in_source = os.listdir("./doc/source")
             session.run(
                 "sphinx-apidoc",
                 "--implicit-namespaces",
                 "-o",
-                "./docs_information/source",
+                "./doc/source",
                 "./src",
                 "./noxfile.py",
                 "./test",
                 "./__pycache__",
             )
-            if len(nb_elements_in_source) == os.listdir("./docs_information/source"):
-                session.run("git", "add", "-f", "docs_information/source")
+            if len(nb_elements_in_source) == os.listdir("./doc/source"):
+                session.run("git", "add", "-f", "doc/source")
                 session.run("git", "commit", "-m", "docs")
             try:
                 session.run("git", "branch", "-D", "docs")
@@ -197,7 +197,7 @@ def docs(session: nox.Session) -> None:
             # recreate branch
             connect_branch(branch, session)
             session.run("git", "update-index", "--assume-unchanged", ".env")
-            session.run("sphinx-build", "-b", "html", "./docs_information/source", "./docs")
+            session.run("sphinx-build", "-b", "html", "./doc/source", "./docs")
             session.run("touch", "docs/.nojekyll")
             commit_and_push_file(branch, session)
             session.run("git", "checkout", "main")
