@@ -19,10 +19,16 @@ def check_if_commited() -> bool:
     output = result.stdout
     print(output)
     # Check if the output contains any indications of uncommitted files
-    if "Changes not staged for commit" in output or "Untracked files" in output or "aucune modification n'a été ajoutée à la validation" in output or "modifié :"in output:
-        return (False)
+    if (
+        "Changes not staged for commit" in output
+        or "Untracked files" in output
+        or "aucune modification n'a été ajoutée à la validation" in output
+        or "modifié :" in output
+    ):
+        return False
     else:
-        return (True)
+        return True
+
 
 # Define the necessary headers and data
 def create_github_pages() -> None:
@@ -73,7 +79,7 @@ def commit_and_push_file(branch: str, session) -> None:
     elif branch == "format":
         session.run("git", "add", ".")
         session.run("git", "commit", "-m", f"format - {time}")
-        session.run("git","push")
+        session.run("git", "push")
 
 
 def list_sub_folder(folder) -> list:
@@ -91,7 +97,7 @@ def connect_branch(name: str, session: nox.Session) -> bool:
     """connect to a branch if it exists or create it
 
     Args:
-        name (str): name of the branch
+        name (str): name of the b ranch
         session (nox.Session): session nox running
 
     Returns:
@@ -106,8 +112,8 @@ def connect_branch(name: str, session: nox.Session) -> bool:
         else:
             print(f"La branche {name} existe déjà.")
         session.run("git", "checkout", name)
-        return (True)
-    return (False)
+        return True
+    return False
 
 
 @nox.session(
@@ -178,10 +184,10 @@ def docs(session: nox.Session) -> None:
             "./src",
             "./noxfile.py",
             "./test",
-            "./__pycache__"
+            "./__pycache__",
         )
         if len(nb_elements_in_source) == os.listdir("./docs_information/source"):
-            session.run("git", "add",'-f', "docs_information/source")
+            session.run("git", "add", "-f", "docs_information/source")
             session.run("git", "commit", "-m", "docs")
         try:
             session.run("git", "branch", "-D", "docs")

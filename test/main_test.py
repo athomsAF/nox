@@ -15,7 +15,6 @@ class MainTestCase(unittest.TestCase):
     Args:
         unittest (_type_): _description_
     """
-
     def test_output(self):
         # Créez un objet StringIO pour capturer la sortie standard
         captured_output = StringIO()

@@ -7,10 +7,10 @@ Welcome to nox-template's documentation!
 ========================================
 
 .. toctree::
-   :maxdepth: 4
-   :glob:
+   :maxdepth: 2
 
-   ../../*
+   intro.md
+
 
 Indices and tables
 ==================

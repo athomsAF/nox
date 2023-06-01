@@ -5,3 +5,4 @@ sphinx-toolbox
 sphinx-autopackagesummary
 recommonmark
 -r requirements.txt
+-r nox-requirements.txt
