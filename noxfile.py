@@ -31,35 +31,34 @@ def check_if_commited() -> bool:
 
 
 # Define the necessary headers and data
-def create_github_pages() -> None:
-    dotenv.load_dotenv()
-    TOKEN = os.getenv("GITHUB_TOKEN")
-    USER = os.getenv("GITHUB_USER")
-    REPOSITORY = os.getenv("GITHUB_REPOSITORY")
-    headers = {
-        "Accept": "application/vnd.github+json",
-        "Authorization": f"Bearer {TOKEN}",
-        "X-GitHub-Api-Version": "2022-11-28",
-    }
-    data = {"source": {"branch": "docs", "path": "/docs"}}
-    # Make the POST request
-    response = requests.post(
-        f"https://api.github.com/repos/{USER}/{REPOSITORY}/pages",
-        headers=headers,
-        json=data,
-    )
-    # Check the response status
-    if response.status_code == 201:
-        print("GitHub Pages send successfully!")
+def create_github_pages(i: int =0) -> None:
+    if i < 2:
+        dotenv.load_dotenv()
+        TOKEN = os.getenv("GITHUB_TOKEN")
+        USER = os.getenv("GITHUB_USER")
+        REPOSITORY = os.getenv("GITHUB_REPOSITORY")
+        headers = {
+            "Accept": "application/vnd.github+json",
+            "Authorization": f"Bearer {TOKEN}",
+            "X-GitHub-Api-Version": "2022-11-28",
+        }
+        data = {"source": {"branch": "docs", "path": "/docs"}}
+        # Make the POST request
         response = requests.post(
-            "https://api.github.com/repos/OWNER/REPO/pages", headers=headers, json=data
+            f"https://api.github.com/repos/{USER}/{REPOSITORY}/pages",
+            headers=headers,
+            json=data,
         )
+        # Check the response status
         if response.status_code == 201:
-            print("GitHub Pages created successfully!")
+            print("GitHub Pages send successfully!")
+        else:
+            print("Failed to create GitHub Pages.")
+            print("Status code:", response.status_code)
+            print("Error message:", response.json())
+            create_github_pages(i+1)
     else:
-        print("Failed to create GitHub Pages.")
-        print("Status code:", response.status_code)
-        print("Error message:", response.json())
+        pass
 
 
 def commit_and_push_file(branch: str, session) -> None:
