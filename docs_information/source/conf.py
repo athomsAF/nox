@@ -31,9 +31,8 @@ extensions = [
     "sphinx.ext.napoleon",
     "sphinx.ext.autosummary",
     "myst_parser",
-    'sphinx.ext.autosectionlabel',
+    "sphinx.ext.autosectionlabel",
     # "sphinx-autodoc2"    #https://myst-parser.readthedocs.io/en/latest/syntax/code_and_apis.html#sphinx-autodoc2
-    
 ]
 
 autodoc_mock_imports = ["../../noxfile.py"]
@@ -55,22 +54,22 @@ exclude_patterns = []
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
-myst_enable_extensions={
+myst_enable_extensions = {
     "colon_fence": True,
-    "substitution" : True,
-    "deflist" : True,
-    "dollarmath" : True,
-    "amsmath" : True,
-    "smartquotes" : True,
-    "replacements" : True,
-    "html_image" : True,
-    "html_admonition" : True,
-    "attrs_inline" : True,
+    "substitution": True,
+    "deflist": True,
+    "dollarmath": True,
+    "amsmath": True,
+    "smartquotes": True,
+    "replacements": True,
+    "html_image": True,
+    "html_admonition": True,
+    "attrs_inline": True,
 }
 
 html_theme = "furo"
 html_static_path = ["_static"]
-source_parsers = {'.md': 'recommonmark.parser.CommonMarkParser'}
+source_parsers = {".md": "recommonmark.parser.CommonMarkParser"}
 source_suffix = {
     ".rst": "restructuredtext",
     ".txt": "markdown",
