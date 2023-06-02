@@ -6,9 +6,10 @@ import requests
 
 import nox
 from nox import command
+import dotenv
 
-PYTHON_VERSIONS = ["3.11"]
 
+PYTHON_VERSIONS = [os.getenv("PYTHON_VERSIONS")]
 
 def check_if_commited() -> bool:
     # Change the working directory
@@ -150,8 +151,10 @@ def dev(session: nox.Session) -> None:
     session.install(
         "-r", "requirements/dev-requirements.txt"
     )  # installe les dependances
-    # session.install("-e", ".") #reccupere la derniere version
-    # créer un setup.py ou pyproject.tomel ==> metadata du projet empàlacement du readme ect
+    if check_if_commited():
+        connect_branch("dev", session)
+    else:
+        print("Please commit your files before formatting")
 
 
 @nox.session(venv_backend="virtualenv", python=PYTHON_VERSIONS)
@@ -215,4 +218,8 @@ def lint(session: nox.Session) -> None:
 
 @nox.session(venv_backend="virtualenv", python=PYTHON_VERSIONS)
 def build(session: nox.Session) -> None:
-    session.install("-r", "requirements/requirements.txt")
+    session.install("-r", "requirements/build-requirements.txt")
+    if check_if_commited():
+        connect_branch("main", session)
+    else:
+        print("Please commit your files before formatting")
