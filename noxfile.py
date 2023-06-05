@@ -203,7 +203,7 @@ def docs(session: nox.Session) -> None:
             #     print("branch does not exist in github")
             # recreate branch
             connect_branch(branch, session)
-            session.run("git", "update-index", "--assume-unchanged", ".env") #don t update .env
+            # session.run("git", "update-index", "--assume-unchanged", ".env") #don t update .env
             session.run("sphinx-build", "-b", "html", "./sphinx/source", "./docs")
             session.run("touch", "docs/.nojekyll")
             session.run("firefox", "docs/index.html")
