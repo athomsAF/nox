@@ -76,7 +76,7 @@ def commit_and_push_file(branch: str, session) -> None:
         # create a commit ith the date as YYY-MM-DD-HH-mm
         time = session.run("date", "+%Y-%m-%d-%H-%M")
         session.run("git", "push", "origin", "build")
-    elif branch == "docs":
+    elif branch == "main":
         session.run("git", "rm", "-r", "*")
         session.run("git", "add", "docs")
         session.run("git", "commit", "-m", "docs")
