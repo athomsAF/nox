@@ -16,6 +16,8 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/sphinx_highlight.js"></script>
+        <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
+        <script>mermaid.initialize({startOnLoad:true});</script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -45,7 +47,10 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="intro.html">Intro</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Exemple of function with sphinx</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#comment-documenter-une-fonction-python">Comment documenter une fonction python</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#comment-documenter-une-fonction-python">Comment documenter une fonction python</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#noxfile.check_if_commited"><code class="docutils literal notranslate"><span class="pre">check_if_commited()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#comment-afficher-un-graph-mermaid">Comment Afficher un graph mermaid</a></li>
 </ul>
 </li>
@@ -79,45 +84,47 @@
 <h1>Exemple of function with sphinx<a class="headerlink" href="#exemple-of-function-with-sphinx" title="Permalink to this heading"></a></h1>
 <section id="comment-documenter-une-fonction-python">
 <h2>Comment documenter une fonction python<a class="headerlink" href="#comment-documenter-une-fonction-python" title="Permalink to this heading"></a></h2>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Pour documenter la fonction suivante dans noxfile,
-```python
-def check_if_commited() -&gt; bool:
-&quot;&quot;&quot;returns if the current branch is commited
-
-Returns:
-    bool: status of branch
-&quot;&quot;&quot;
-```
-Vous pouvez utiliser la commande suivante:
-
-```markdown
-\```{eval-rst}
-.. autofunction:: noxfile.check_if_commited
-\```
-```
-:::{admonition} Attention au chemin d&#39;accès
-:class: attention
-
-Il faut spécifier à la place de noxfile le chemin d&#39;accès jusqu&#39;au fichier.
-:::
-
-:::{admonition} Auto-function!
-:class: tip
-
-We can also use automodule to auto-document a file
-:::
-
-Cela permet d&#39;afficher le contenu de la manière suivante.
-```{eval-rst}
-.. autofunction:: noxfile.check_if_commited
-```
+<p>Pour documenter la fonction suivante dans noxfile,</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">check_if_commited</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="sd">&quot;&quot;&quot;returns if the current branch is commited</span>
+<span class="sd">Returns:</span>
+<span class="sd">    bool: status of branch</span>
+<span class="sd">&quot;&quot;&quot;</span>
 </pre></div>
 </div>
+<p>Vous pouvez utiliser la commande suivante:</p>
+<div class="highlight-markdown notranslate"><div class="highlight"><pre><span></span>\```{eval-rst}
+.. autofunction:: noxfile.check_if_commited
+\```
+</pre></div>
+</div>
+<div class="attention admonition">
+<p class="admonition-title">Attention au chemin d’accès</p>
+<p>Il faut spécifier à la place de noxfile le chemin d’accès jusqu’au fichier.</p>
+</div>
+<div class="tip admonition">
+<p class="admonition-title">Auto-function!</p>
+<p>We can also use automodule to auto-document a file</p>
+</div>
+<p>Cela permet d’afficher le contenu de la manière suivante.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="noxfile.check_if_commited">
+<span class="sig-prename descclassname"><span class="pre">noxfile.</span></span><span class="sig-name descname"><span class="pre">check_if_commited</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#noxfile.check_if_commited" title="Permalink to this definition"></a></dt>
+<dd><p>returns if the current branch is commited</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>status of branch</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 <section id="comment-afficher-un-graph-mermaid">
 <h2>Comment Afficher un graph mermaid<a class="headerlink" href="#comment-afficher-un-graph-mermaid" title="Permalink to this heading"></a></h2>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>```markdown
-\```{mermaid}
+<div class="highlight-markdown notranslate"><div class="highlight"><pre><span></span>\```{mermaid}
 graph TD
     A[Enter Chart Definition] --&gt; B(Preview)
     B --&gt; C{decide}
@@ -127,9 +134,10 @@ graph TD
     D --&gt; F[Save Image and Code]
     F --&gt; B
 \```
-```
-```{mermaid}
-graph TD
+</pre></div>
+</div>
+<div class="mermaid">
+            graph TD
     A[Enter Chart Definition] --&gt; B(Preview)
     B --&gt; C{decide}
     C --&gt; D[Keep]
@@ -137,10 +145,7 @@ graph TD
     E --&gt; B
     D --&gt; F[Save Image and Code]
     F --&gt; B
-```
-</pre></div>
-</div>
-</section>
+        </div></section>
 </section>
 
 
