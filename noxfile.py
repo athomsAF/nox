@@ -79,7 +79,7 @@ def commit_and_push_file(branch: str, session) -> None:
     elif branch == "main":
         session.run("git", "add", "docs")
         session.run("git", "commit", "-m", "docs")
-        session.run("git", "push", "origin", "docs")
+        session.run("git", "push")
     elif branch == "format":
         session.run("git", "add", ".")
         session.run("git", "commit", "-m", f"format - {time}")
