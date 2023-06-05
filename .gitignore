@@ -1,0 +1,4 @@
+.nox
+__pycache__
+docs_information
+.env
