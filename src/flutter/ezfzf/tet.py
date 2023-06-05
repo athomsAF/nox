@@ -1,2 +1,0 @@
-def prout():
-    print("prout")
