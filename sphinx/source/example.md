@@ -4,7 +4,7 @@
 
 Pour documenter la fonction suivante dans noxfile,
 
-```python
+```{code-block} python
 def check_if_commited() -> bool:
 """returns if the current branch is commited
 Returns:
@@ -14,7 +14,7 @@ Returns:
 
 Vous pouvez utiliser la commande suivante:
 
-```markdown
+```{code-block} markdown
 \```{eval-rst}
 .. autofunction:: noxfile.check_if_commited
 \```
@@ -38,7 +38,7 @@ Cela permet d'afficher le contenu de la manière suivante.
 
 ## Comment Afficher un graph mermaid
 
-```markdown
+```{code-block} markdown
 \```{mermaid}
 graph TD
     A[Enter Chart Definition] --> B(Preview)
