@@ -205,11 +205,11 @@ def docs(session: nox.Session) -> None:
             # recreate branch
             connect_branch(branch, session)
             session.run("git", "update-index", "--assume-unchanged", ".env") #don t update .env
-            session.run("sphinx-build", "-b", "html", "./docs/source", "./docs/build")
-            session.run("touch", "docs/build/.nojekyll")
-            session.run("firefox", "docs/build/index.html")
+            session.run("sphinx-build", "-b", "html", "./sphinx", "./docs")
+            session.run("touch", "docs/.nojekyll")
+            session.run("firefox", "docs/index.html")
             commit_and_push_file(branch, session)
-            create_github_pages("./docs/build", branch)
+            create_github_pages("./docs", branch)
         else:
             print("Please commit your files before formatting")
     except:
