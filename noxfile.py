@@ -12,6 +12,11 @@ import dotenv
 PYTHON_VERSIONS = [os.getenv("PYTHON_VERSIONS")]
 
 def check_if_commited() -> bool:
+    """returns if the current branch is commited
+
+    Returns:
+        bool: status of branch
+    """
     # Change the working directory
     # Run the git status command and capture the output
     result = subprocess.run(["git", "status"], capture_output=True, text=True)

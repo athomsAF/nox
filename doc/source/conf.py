@@ -1,14 +1,16 @@
 import os
 import sys
+from dotenv import load_dotenv
 
 sys.path.insert(0, os.path.abspath("../.."))
 sys.path.insert(0, os.path.abspath("../../src"))
- 
+dotenv_path = os.path.join(os.path.dirname(__file__), "../../.env")
+load_dotenv(dotenv_path)
 
 PROJECT = os.getenv("GITHUB_REPOSITORY")
-COPYRIGHT = os.getenv("COPYRIGHT")
-AUTHOR = os.getenv("AUTHOR")
-RELEASE = os.getenv("releaseVersion")
+copyright =os.getenv("COPYRIGHT")
+AUTHOR = os.getenv("GITHUB_USER")
+RELEASE = os.getenv("REELEASE_PROJECT_VERSION")
 autosectionlabel_prefix_document = True
 
 
@@ -21,6 +23,7 @@ extensions = [
     "sphinx.ext.autosummary",
     "myst_parser",
     "sphinx.ext.autosectionlabel",
+    "sphinxcontrib.mermaid",
     # "sphinx-autodoc2"    #https://myst-parser.readthedocs.io/en/latest/syntax/code_and_apis.html#sphinx-autodoc2
 ]
 
@@ -56,7 +59,7 @@ myst_enable_extensions = {
     "attrs_inline": True,
 }
 
-html_theme = "furo"
+html_theme = "sphinx_rtd_theme"
 html_static_path = ["_static"]
 source_parsers = {".md": "recommonmark.parser.CommonMarkParser"}
 source_suffix = {
