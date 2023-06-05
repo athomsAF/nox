@@ -24,7 +24,7 @@ extensions = [
     "myst_parser",
     "sphinx.ext.autosectionlabel",
     "sphinxcontrib.mermaid",
-    # "sphinx-autodoc2"    #https://myst-parser.readthedocs.io/en/latest/syntax/code_and_apis.html#sphinx-autodoc2
+    "sphinx_copybutton",
 ]
 
 autodoc_mock_imports = ["../../noxfile.py"]
