@@ -10,6 +10,7 @@
 :maxdepth: 1
 
 intro.md
+example.md
 ```
 
 # Indices and tables
