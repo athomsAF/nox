@@ -62,7 +62,7 @@ def create_github_pages(dir:str = "/docs/build", branch: str ="main", i: int =0)
             print("Failed to create GitHub Pages.")
             print("Status code:", response.status_code)
             print("Error message:", response.json())
-            create_github_pages(i+1)
+            create_github_pages(dir,branch,i+1)
     else:
         pass
 
