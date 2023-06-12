@@ -8,6 +8,8 @@ import nox
 from nox import command
 import dotenv
 
+from invoke import task
+
 
 PYTHON_VERSIONS = [os.getenv("PYTHON_VERSIONS")]
 
@@ -155,10 +157,10 @@ def dev(session: nox.Session) -> None:
     session.install(
         "-r", "requirements/dev-requirements.txt"
     )  # installe les dependances
-    if check_if_commited():
-        connect_branch("dev", session)
-    else:
-        print("Please commit your files before formatting")
+    # if check_if_commited():
+    #     connect_branch("dev", session)
+    # else:
+    #     print("Please commit your files before formatting")
 
 
 @nox.session(venv_backend="virtualenv", python=PYTHON_VERSIONS)
@@ -178,9 +180,6 @@ def test(session: nox.Session) -> None:
 
 @nox.session(venv_backend="virtualenv", python=PYTHON_VERSIONS)
 def docs(session: nox.Session) -> None:
-    try:
-        branch = "main"
-        if connect_branch("main", session):
             session.install("-r", "requirements/docs-requirements.txt")
             # nb_elements_in_source = os.listdir("./doc/source")
             # session.run(
@@ -202,17 +201,11 @@ def docs(session: nox.Session) -> None:
             # except:
             #     print("branch does not exist in github")
             # recreate branch
-            connect_branch(branch, session)
             # session.run("git", "update-index", "--assume-unchanged", ".env") #don t update .env
             session.run("sphinx-build", "-b", "html", "./sphinx/source", "./docs")
             session.run("touch", "docs/.nojekyll")
             session.run("firefox", "docs/index.html")
-            commit_and_push_file(branch, session)
-            create_github_pages("./docs", branch)
-        else:
-            print("Please commit your files before formatting")
-    except:
-        connect_branch("main", session)
+
 
 @nox.session(venv_backend="virtualenv", python=PYTHON_VERSIONS)
 def lint(session: nox.Session) -> None:
