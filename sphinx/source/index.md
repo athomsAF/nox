@@ -3,18 +3,15 @@
 % You can adapt this file completely to your liking, but it should at least
 % contain the root `toctree` directive.
 
-# Welcome to nox's documentation!
+# Bienvenue à la documentation des outils du ThinkerLab
 
 ```{toctree}
-:caption: 'Contents:'
+:caption: 'Présentation'
 :maxdepth: 1
 
 intro.md
-example.md
 ```
 
-# Indices and tables
-
-- {ref}`genindex`
-- {ref}`modindex`
-- {ref}`search`
+```{toctree}
+exemple.md
+```
