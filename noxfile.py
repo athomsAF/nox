@@ -1,17 +1,11 @@
-import os
-import subprocess
-
-import dotenv
-import requests
-
 import nox
-from nox import command
-import dotenv
 
 PYTHON_VERSIONS = ["3.11"]
+env = 'conda'
+
 
 @nox.session(
-    venv_backend="virtualenv", python=PYTHON_VERSIONS
+    venv_backend=env, python=PYTHON_VERSIONS
 )  # use this annotation on the wrapper works like a charm
 def format(session: nox.Session) -> None:
     """
@@ -26,10 +20,12 @@ def format(session: nox.Session) -> None:
     try:
         session.run("black", "--exclude", ".nox", ".")  # formate le code
         session.run("isort", ".")  # formate les imports
-    except:
+    except Exception as e:
         print("formatting failed")
-    
-@nox.session(venv_backend="virtualenv", python=PYTHON_VERSIONS)
+        print(e)
+
+
+@nox.session(venv_backend=env, python=PYTHON_VERSIONS)
 def dev(session: nox.Session) -> None:
     """_summary_
 
@@ -40,16 +36,19 @@ def dev(session: nox.Session) -> None:
         "-r", "requirements/dev-requirements.txt"
     )
 
-@nox.session(venv_backend="virtualenv", python=PYTHON_VERSIONS)
+
+@nox.session(venv_backend=env, python=PYTHON_VERSIONS)
 def test(session: nox.Session) -> None:
     session.install("-r", "requirements/test-requirements.txt")
     try:
-        test = session.run("python", "-u", "test/main_test.py")
-    except:
+        session.run("python", "-u", "test/main_test.py")
+    except Exception as e:
         print("test failed")
+        print(e)
         # check if ll test passed well
 
-@nox.session(venv_backend="virtualenv", python=PYTHON_VERSIONS)
+
+@nox.session(venv_backend=env, python=PYTHON_VERSIONS)
 def docs(session: nox.Session) -> None:
     session.install("-r", "requirements/docs-requirements.txt")
     session.run("sphinx-build", "-b", "html", "./sphinx/source", "./docs")
@@ -57,11 +56,11 @@ def docs(session: nox.Session) -> None:
     session.run("firefox", "docs/index.html")
 
 
-@nox.session(venv_backend="virtualenv", python=PYTHON_VERSIONS)
+@nox.session(venv_backend=env, python=PYTHON_VERSIONS)
 def lint(session: nox.Session) -> None:
     session.install("-r", "requirements/lint-requirements.txt")
 
 
-@nox.session(venv_backend="virtualenv", python=PYTHON_VERSIONS)
+@nox.session(venv_backend=env, python=PYTHON_VERSIONS)
 def build(session: nox.Session) -> None:
     session.install("-r", "requirements/build-requirements.txt")
