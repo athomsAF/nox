@@ -1,7 +1,7 @@
 import nox
 
 PYTHON_VERSIONS = ["3.11"]
-env = 'conda'
+env = 'virtualenv'
 
 
 @nox.session(

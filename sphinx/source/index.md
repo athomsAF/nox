@@ -11,7 +11,3 @@
 
 intro.md
 ```
-
-```{toctree}
-exemple.md
-```
