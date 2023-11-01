@@ -20,5 +20,5 @@ sphinx-togglebutton
 
 
 #import the rest
--r requirements.txt
+-r ../requirements.txt
 -r nox-requirements.txt
